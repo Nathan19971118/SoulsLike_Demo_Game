@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
                     float targetAngle = Mathf.Atan2(horizontalInput, verticalInput) * Mathf.Rad2Deg;
                     Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
 
-                    // Smoothly rotate to fack movement direction
+                    // Smoothly rotate to back movement direction
                     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
                     // Move forward in the direction we're facing
