@@ -20,10 +20,13 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     public Transform orientation;
+    public Transform mainCamera;
 
     [Header("Input")]
     float horizontalInput;
     float verticalInput;
+    float camHorizontalInput;
+    float camVerticalInput;
     bool jumpInput;
     bool dodgeInput;
 
@@ -39,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
         animatorHandler=GetComponentInChildren<AnimatorHandler>();
         rigidBody.freezeRotation = true;
         isGrounded = true;
+
+        // If mainCamera is not set in inspector, try to find it
+        if (mainCamera == null)
+            mainCamera = Camera.main.transform;
     }
 
     private void Update()
@@ -74,6 +81,8 @@ public class PlayerMovement : MonoBehaviour
         // Get Input Axis
         horizontalInput = Input.GetAxis("MoveHorizontal");
         verticalInput = Input.GetAxis("MoveVertical");
+        camHorizontalInput = Input.GetAxis("CameraMoveHorizontal");
+        camVerticalInput = Input.GetAxis("CameraMoveVertical");
 
         // Get jump Input
         jumpInput = Input.GetButtonDown("Jump");
@@ -86,31 +95,40 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void HandleMovementAndRotation()
+    public void HandleMovementAndRotation()
     {
         if (animatorHandler.canRotate)
         {
-            // Only process if there's input
-            if (horizontalInput != 0 || verticalInput != 0)
+            if (camHorizontalInput == 0)
             {
-                // Calculate the input direction
-                Vector3 inputDirection = new Vector3(horizontalInput, 0, verticalInput);
-                float inputMagnitude = inputDirection.magnitude;
-
-                // Normalize the direction and handle deadzone
-                if (inputMagnitude > 0.19f) // Small deadzone to prevent drift
+                // Only process if there's input
+                if (horizontalInput != 0 || verticalInput != 0)
                 {
-                    // Calculate target rotation from input
-                    float targetAngle = Mathf.Atan2(horizontalInput, verticalInput) * Mathf.Rad2Deg;
-                    Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
+                    // Calculate the input direction
+                    Vector3 inputDirection = new Vector3(horizontalInput, 0, verticalInput);
+                    float inputMagnitude = inputDirection.magnitude;
 
-                    // Smoothly rotate to back movement direction
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                    // Normalize the direction and handle deadzone
+                    if (inputMagnitude > 0.19f) // Small deadzone to prevent drift
+                    {
+                        // Calculate target rotation from input
+                        float targetAngle = Mathf.Atan2(horizontalInput, verticalInput) * Mathf.Rad2Deg;
+                        Quaternion targetRotation = Quaternion.Euler(0, targetAngle, 0);
 
-                    // Move forward in the direction we're facing
-                    transform.position += transform.forward * moveSpeed * inputMagnitude * Time.deltaTime;
+                        // Smoothly rotate to back movement direction
+                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+                        // Move forward in the direction we're facing
+                        transform.position += transform.forward * moveSpeed * inputMagnitude * Time.deltaTime;
+                    }
                 }
             }
+
+            else if (camHorizontalInput != 0)
+            {
+
+            }
+            
         }
     }
 
