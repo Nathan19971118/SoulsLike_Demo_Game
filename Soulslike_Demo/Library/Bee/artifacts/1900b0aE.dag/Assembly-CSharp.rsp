@@ -369,7 +369,6 @@
 "Assets/Scripts/AnimatorHandler.cs"
 "Assets/Scripts/CameraMovement.cs"
 "Assets/Scripts/PlayerMovement.cs"
-"Assets/Scripts/PlayerRotationControl.cs"
 -langversion:9.0
 /deterministic
 /optimize+

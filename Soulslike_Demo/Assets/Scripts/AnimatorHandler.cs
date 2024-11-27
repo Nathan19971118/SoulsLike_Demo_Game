@@ -92,6 +92,11 @@ public class AnimatorHandler : MonoBehaviour
         anim.SetTrigger("isDodge");
     }
 
+    public void HandleLightAttackAnim()
+    {
+        anim.SetTrigger("isUnarmedLightAttack");
+    }
+
     public void CanRotate()
     {
         canRotate = true;
